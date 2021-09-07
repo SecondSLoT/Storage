@@ -74,6 +74,7 @@ class CharacterDaoCursor @Inject constructor(
         Log.d(TAG, "insert()")
         val values = getContentValues(characterDb)
         db.insert(CharacterTable.TABLE_NAME, null, values)
+        getAllSorted(sortColumn)
     }
 
     override suspend fun insertAll(charactersDb: List<CharacterDb>) {
@@ -81,6 +82,7 @@ class CharacterDaoCursor @Inject constructor(
         for (item in charactersDb) {
             db.insert(CharacterTable.TABLE_NAME, null, getContentValues(item))
         }
+        getAllSorted(sortColumn)
     }
 
     override suspend fun update(characterDb: CharacterDb) {
@@ -92,6 +94,7 @@ class CharacterDaoCursor @Inject constructor(
             "id = ?",
             arrayOf(characterDb.id.toString())
         )
+        getAllSorted(sortColumn)
     }
 
     override suspend fun delete(characterDb: CharacterDb) {
@@ -101,6 +104,7 @@ class CharacterDaoCursor @Inject constructor(
             "id = ?",
             arrayOf(characterDb.id.toString())
         )
+        getAllSorted(sortColumn)
     }
 
     override suspend fun clear() {
@@ -109,6 +113,7 @@ class CharacterDaoCursor @Inject constructor(
             null,
             null
         )
+        getAllSorted(sortColumn)
     }
 
     private fun getContentValues(characterDb: CharacterDb): ContentValues {
