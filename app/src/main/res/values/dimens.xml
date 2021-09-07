@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <dimen name="margin_screen_start">16dp</dimen>
+    <dimen name="margin_screen_end">16dp</dimen>
+    <dimen name="margin_screen_top">8dp</dimen>
+    <dimen name="margin_screen_bottom">8dp</dimen>
+
+    <dimen name="margin_text_start">4dp</dimen>
+    <dimen name="margin_text_input_layouts">16dp</dimen>
+
+    <dimen name="touch_element_min_size">48dp</dimen>
+</resources>

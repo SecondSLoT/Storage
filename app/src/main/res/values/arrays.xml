@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="sort_options">
+        <item>@string/name</item>
+        <item>@string/location</item>
+        <item>@string/quote</item>
+        <item>@string/none</item>
+    </string-array>
+
+    <string-array name="sort_options_values">
+        <item>name</item>
+        <item>location</item>
+        <item>quote</item>
+        <item>none</item>
+    </string-array>
+
+    <string-array name="db_management_systems">
+        <item>@string/room</item>
+        <item>@string/cursor</item>
+    </string-array>
+
+    <string-array name="db_management_systems_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

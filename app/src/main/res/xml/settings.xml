@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        app:key="sort_by"
+        app:title="@string/sort_by"
+        app:useSimpleSummaryProvider="true"
+        app:defaultValue="none"
+        app:entries="@array/sort_options"
+        app:entryValues="@array/sort_options_values" />
+
+    <ListPreference
+        app:key="db_management_system"
+        app:title="@string/db_management_system"
+        app:useSimpleSummaryProvider="true"
+        app:defaultValue="1"
+        app:entries="@array/db_management_systems"
+        android:entryValues="@array/db_management_systems_values"/>
+
+</PreferenceScreen>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/storageListFragment">
+
+    <fragment
+        android:id="@+id/storageListFragment"
+        android:name="com.secondslot.storage.features.storagelist.ui.StorageListFragment"
+        android:label="StorageListFragment" >
+        <action
+            android:id="@+id/to_addEntityFragment"
+            app:destination="@id/addEntityFragment" />
+        <action
+            android:id="@+id/to_clearDbDialog"
+            app:destination="@id/clearDbDialog" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEntityFragment"
+        android:name="com.secondslot.storage.features.addentity.ui.AddEntityFragment"
+        android:label="AddEntityFragment" >
+        <argument
+            android:name="id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.secondslot.storage.features.settings.SettingsFragment"
+        android:label="SettingsFragment" />
+    <dialog
+        android:id="@+id/clearDbDialog"
+        android:name="com.secondslot.storage.features.storagelist.ui.ClearDbDialog"
+        android:label="ClearDbDialog" />
+</navigation>

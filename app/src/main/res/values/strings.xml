@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Storage App</string>
+    <string name="add_entity_toolbar_title">Add Character</string>
+    <string name="edit_entity_toolbar_title">Edit Character</string>
+
+    <string name="name">Name</string>
+    <string name="location">Location</string>
+    <string name="quote">Quote</string>
+    <string name="none">None</string>
+
+    <string name="add_button">add</string>
+    <string name="save_button">save</string>
+    <string name="fab_content_description">add new character</string>
+    <string name="edit_content_description">edit character</string>
+
+    <!-- Settings fragment -->
+    <string name="sort_by">Sort by</string>
+    <string name="db_management_system">Database management system</string>
+    <string name="room">Room</string>
+    <string name="cursor">Cursor</string>
+
+
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
+    <!-- Main menu -->
+    <string name="settings">Settings</string>
+    <string name="add_fake_data">Add fake data to Db</string>
+    <string name="clear_db">Clear database</string>
+
+    <!-- Clear db confirm dialog -->
+    <string name="clear_db_dialog_title">Clear database?</string>
+    <string name="clear_db_dialog_message">This will delete all characters</string>
+    <string name="clear_db_dialog_positive_button">Clear</string>
+    <string name="clear_db_dialog_negative_button">Cancel</string>
+
+    <!-- Icons font-->
+    <string name="fa_map_marker" translatable="false">\uf041</string>
+</resources>

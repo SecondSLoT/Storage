@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/margin_start_guideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/margin_screen_start" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/margin_end_guideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/margin_screen_end" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/margin_top_guideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/margin_screen_top" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/margin_bottom_guideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/margin_screen_bottom" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/name_text_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_screen_start"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@id/margin_start_guideline"
+        app:layout_constraintEnd_toStartOf="@id/margin_end_guideline"
+        app:layout_constraintTop_toTopOf="@id/margin_top_guideline"
+        app:layout_constraintBottom_toTopOf="@id/location_text_input_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_text_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/location_text_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_text_input_layouts"
+        app:layout_constraintStart_toEndOf="@id/margin_start_guideline"
+        app:layout_constraintEnd_toStartOf="@id/margin_end_guideline"
+        app:layout_constraintTop_toBottomOf="@id/name_text_input_layout"
+        app:layout_constraintBottom_toTopOf="@id/quote_text_input_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/location_text_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/location" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/quote_text_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_text_input_layouts"
+        app:layout_constraintEnd_toStartOf="@id/margin_end_guideline"
+        app:layout_constraintStart_toEndOf="@id/margin_start_guideline"
+        app:layout_constraintTop_toBottomOf="@id/location_text_input_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/quote_text_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/quote" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_button"
+        android:layout_marginBottom="@dimen/margin_screen_end"
+        app:layout_constraintStart_toStartOf="@id/margin_start_guideline"
+        app:layout_constraintEnd_toStartOf="@id/margin_end_guideline"
+        app:layout_constraintBottom_toTopOf="@id/margin_bottom_guideline"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
