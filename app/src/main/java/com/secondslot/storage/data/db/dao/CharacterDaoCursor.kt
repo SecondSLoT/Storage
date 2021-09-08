@@ -6,9 +6,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.secondslot.storage.data.db.CharacterTable
 import com.secondslot.storage.data.db.model.CharacterDb
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 private const val TAG = "CharacterDaoCursor"
@@ -17,11 +21,29 @@ class CharacterDaoCursor @Inject constructor(
     private val db: SQLiteDatabase
 ) : CharacterDao() {
 
-    private var sortColumn = "none"
+    private var currentSortColumn = "id"
+    private var dbDataChangedListener: ((Unit) -> Unit)? = null
 
     override fun getAllSorted(columnName: String): Flow<List<CharacterDb>> {
-        sortColumn = columnName
-        Log.d(TAG, "getAllSorted()")
+        currentSortColumn = columnName
+
+        return listenDbDataChanges()
+    }
+
+    private fun listenDbDataChanges(): Flow<List<CharacterDb>> = callbackFlow {
+
+        val listener: (Unit) -> Unit = {
+            trySend(getAllDataFromDb())
+        }
+
+        dbDataChangedListener = listener
+        dbDataChangedListener?.invoke(Unit)
+
+        awaitClose { dbDataChangedListener = null }
+    }
+
+    private fun getAllDataFromDb(): List<CharacterDb> {
+        Log.d(TAG, "getAllDataFromDb using CharacterDaoCursor")
         val charactersDb = mutableListOf<CharacterDb>()
 
         val cursor = db.query(
@@ -31,7 +53,7 @@ class CharacterDaoCursor @Inject constructor(
             null,
             null,
             null,
-            columnName
+            currentSortColumn
         )
 
         cursor.use { cursor ->
@@ -42,78 +64,98 @@ class CharacterDaoCursor @Inject constructor(
             }
         }
 
-        Log.d(TAG,"charactersDb size = ${charactersDb.size}")
-        return flowOf(charactersDb)
+        return charactersDb
     }
 
     override suspend fun get(id: Int): CharacterDb? {
         Log.d(TAG, "get()")
-        var characterDb: CharacterDb
+        var characterDb: CharacterDb? = null
 
-        val cursor = db.query(
-            CharacterTable.TABLE_NAME,
-            null,
-            "id = ?",
-            arrayOf(id.toString()),
-            null,
-            null,
-            null
-        )
+        withContext(Dispatchers.IO) {
+            val cursor = db.query(
+                CharacterTable.TABLE_NAME,
+                null,
+                "id = ?",
+                arrayOf(id.toString()),
+                null,
+                null,
+                null
+            )
 
-        cursor.use { cursor ->
-            if (cursor.moveToFirst()) {
-                characterDb = getCharacterDbFromCursor(cursor)
-                getAllSorted(sortColumn)
-                return characterDb
+            cursor.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    characterDb = getCharacterDbFromCursor(cursor)
+                }
             }
         }
-        return null
+
+        return characterDb
     }
 
     override suspend fun insert(characterDb: CharacterDb) {
         Log.d(TAG, "insert()")
-        val values = getContentValues(characterDb)
-        db.insert(CharacterTable.TABLE_NAME, null, values)
-        getAllSorted(sortColumn)
+
+        withContext(Dispatchers.IO) {
+            val values = getContentValues(characterDb)
+            db.insert(CharacterTable.TABLE_NAME, null, values)
+        }
+
+        dbDataChangedListener?.invoke(Unit)
     }
 
     override suspend fun insertAll(charactersDb: List<CharacterDb>) {
         Log.d(TAG, "insertAll()")
-        for (item in charactersDb) {
-            db.insert(CharacterTable.TABLE_NAME, null, getContentValues(item))
+
+        withContext(Dispatchers.IO) {
+            for (item in charactersDb) {
+                db.insert(CharacterTable.TABLE_NAME, null, getContentValues(item))
+            }
         }
-        getAllSorted(sortColumn)
+
+        dbDataChangedListener?.invoke(Unit)
     }
 
     override suspend fun update(characterDb: CharacterDb) {
         Log.d(TAG, "update()")
-        val values = getContentValues(characterDb)
-        db.update(
-            CharacterTable.TABLE_NAME,
-            values,
-            "id = ?",
-            arrayOf(characterDb.id.toString())
-        )
-        getAllSorted(sortColumn)
+
+        withContext(Dispatchers.IO) {
+            val values = getContentValues(characterDb)
+            db.update(
+                CharacterTable.TABLE_NAME,
+                values,
+                "id = ?",
+                arrayOf(characterDb.id.toString())
+            )
+        }
+
+        dbDataChangedListener?.invoke(Unit)
     }
 
     override suspend fun delete(characterDb: CharacterDb) {
         Log.d(TAG, "delete() id = ${characterDb.id}")
-        db.delete(
-            CharacterTable.TABLE_NAME,
-            "id = ?",
-            arrayOf(characterDb.id.toString())
-        )
-        getAllSorted(sortColumn)
+
+        withContext(Dispatchers.IO) {
+            db.delete(
+                CharacterTable.TABLE_NAME,
+                "id = ?",
+                arrayOf(characterDb.id.toString())
+            )
+        }
+
+        dbDataChangedListener?.invoke(Unit)
     }
 
     override suspend fun clear() {
-        db.delete(
-            CharacterTable.TABLE_NAME,
-            null,
-            null
-        )
-        getAllSorted(sortColumn)
+
+        withContext(Dispatchers.IO) {
+            db.delete(
+                CharacterTable.TABLE_NAME,
+                null,
+                null
+            )
+        }
+
+        dbDataChangedListener?.invoke(Unit)
     }
 
     private fun getContentValues(characterDb: CharacterDb): ContentValues {

@@ -18,6 +18,8 @@ import com.secondslot.storage.features.storagelist.adapter.CharacterAdapter
 import com.secondslot.storage.features.storagelist.vm.StorageListViewModel
 import com.secondslot.storage.features.storagelist.vm.StorageListViewModelFactory
 
+private const val TAG = "StorageListFragment"
+
 class StorageListFragment : Fragment(), CharacterListener {
 
     //    private val viewModel by viewModels<StorageListViewModel>()
@@ -67,7 +69,7 @@ class StorageListFragment : Fragment(), CharacterListener {
     private fun setObservers() {
 
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
-            Log.d("myLogs", "Characters.size = ${characters.size}")
+            Log.d(TAG, "CharactersLiveData received. Characters.size = ${characters.size}")
             characters?.let { characterAdapter.submitList(characters) }
 //            Log.d("myLogs", characters.joinToString())
         }
@@ -116,8 +118,7 @@ class StorageListFragment : Fragment(), CharacterListener {
     override fun onResume() {
         super.onResume()
         Log.d("myLogs", "StorageListFragment onResume()")
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        viewModel.onPrefsUpdated(prefs)
+        viewModel.onPrefsUpdated()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

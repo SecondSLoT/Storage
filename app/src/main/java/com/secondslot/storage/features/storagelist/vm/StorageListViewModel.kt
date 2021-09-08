@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class StorageListViewModel(prefs: SharedPreferences) : ViewModel() {
+class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
 
     private val fakeDataForDb = FakeDataForDb()
-    private var sortField = getSortField(prefs)
-    private var dbms = prefs.getString("db_management_system", "1")
+    private var sortField = getSortField()
+//    private var dbms = prefs.getString("db_management_system", "1")
 
     @Inject
     lateinit var getCharactersUseCase: GetCharactersUseCase
@@ -34,6 +34,9 @@ class StorageListViewModel(prefs: SharedPreferences) : ViewModel() {
 
     @Inject
     lateinit var clearDbUseCase: ClearDbUseCase
+
+    @Inject
+    lateinit var notifyDbChangedUseCase: NotifyDbChangedUseCase
 
     private var _charactersLiveData = MutableLiveData<List<Character>>()
     val charactersLiveData get() = _charactersLiveData
@@ -66,21 +69,20 @@ class StorageListViewModel(prefs: SharedPreferences) : ViewModel() {
         _openAddEntityLiveData.value = false
     }
 
-    private fun getSortField(prefs: SharedPreferences): String =
-        when (prefs.getString("sort_by", "none")!!) {
+    private fun getSortField(): String =
+        when (prefs.getString("sort_by", "id")!!) {
             "name" -> ColumnNames.NAME.value
             "location" -> ColumnNames.LOCATION.value
             "quote" -> ColumnNames.QUOTE.value
-            else -> ""
+            else -> ColumnNames.ID.value
         }
 
-    fun onPrefsUpdated(prefs: SharedPreferences) {
-        val newSortField = getSortField(prefs)
+    fun onPrefsUpdated() {
+        val newSortField = getSortField()
         if (newSortField != sortField) {
             sortField = newSortField
-            Log.d("myLogs", "getNewCharacters")
-            getCharacters()
         }
+        getCharacters()
     }
 
     /**
@@ -111,7 +113,6 @@ class StorageListViewModel(prefs: SharedPreferences) : ViewModel() {
     fun onClearDbConfirmed() {
         viewModelScope.launch {
             clearDbUseCase.execute()
-            getCharacters()
         }
     }
 }

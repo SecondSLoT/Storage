@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="light_blue_100">#b3e5fc</color>
-    <color name="light_blue_100_light">#e6ffff</color>
-    <color name="light_blue_100_dark">#82b3c9</color>
-    <color name="light_blue_300">#4fc3f7</color>
-    <color name="light_blue_300_light">#8bf6ff</color>
-    <color name="light_blue_300_dark">#0093c4</color>
-
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
+    <color name="cyan_800">#00838f</color>
+    <color name="cyan_800_light">#4fb3bf</color>
+    <color name="cyan_800_dark">#005662</color>
 
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>

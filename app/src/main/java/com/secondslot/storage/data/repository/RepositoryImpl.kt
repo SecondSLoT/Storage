@@ -70,4 +70,11 @@ class RepositoryImpl @Inject constructor() : Repository {
     override suspend fun clearDb() {
         getDao().clear()
     }
+
+    override fun notifyDbChanged(): Boolean {
+        if (prefs.getString("db_management_system","1") == "2") {
+            return true
+        }
+        return false
+    }
 }
