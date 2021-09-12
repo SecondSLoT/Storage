@@ -11,7 +11,7 @@ abstract class CharacterDao {
         "SELECT * FROM characters ORDER BY " +
                 "CASE WHEN :columnName = 'name' THEN name " +
                 "WHEN :columnName = 'location' THEN location " +
-                "WHEN :columnName = 'quote' THEN quote END"
+                "WHEN :columnName = 'quote' THEN quote END COLLATE NOCASE"
     )
     abstract fun getAllSorted(columnName: String): Flow<List<CharacterDb>>
 

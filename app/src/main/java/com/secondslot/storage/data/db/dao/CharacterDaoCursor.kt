@@ -6,12 +6,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.secondslot.storage.data.db.CharacterTable
 import com.secondslot.storage.data.db.model.CharacterDb
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ class CharacterDaoCursor @Inject constructor(
 ) : CharacterDao() {
 
     private var currentSortColumn = "id"
-    private var dbDataChangedListener: ((Unit) -> Unit)? = null
+    private var dbDataChangedListener: ((List<CharacterDb>) -> Unit)? = null
 
     override fun getAllSorted(columnName: String): Flow<List<CharacterDb>> {
         currentSortColumn = columnName
@@ -32,28 +32,29 @@ class CharacterDaoCursor @Inject constructor(
 
     private fun listenDbDataChanges(): Flow<List<CharacterDb>> = callbackFlow {
 
-        val listener: (Unit) -> Unit = {
-            trySend(getAllDataFromDb())
+        val listener: (List<CharacterDb>) -> Unit = {
+            trySend(it)
         }
 
         dbDataChangedListener = listener
-        dbDataChangedListener?.invoke(Unit)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            dbDataChangedListener?.invoke(getAllDataFromDb())
+        }
 
         awaitClose { dbDataChangedListener = null }
     }
 
     private fun getAllDataFromDb(): List<CharacterDb> {
-        Log.d(TAG, "getAllDataFromDb using CharacterDaoCursor")
+        Log.d(TAG, "getAllDataFromDb(), thread = " + Thread.currentThread().name)
         val charactersDb = mutableListOf<CharacterDb>()
 
-        val cursor = db.query(
-            CharacterTable.TABLE_NAME,
-            null,
-            null,
-            null,
-            null,
-            null,
-            currentSortColumn
+        val cursor = db.rawQuery(
+            "SELECT * FROM characters ORDER BY " +
+                    "CASE WHEN ? = 'name' THEN name " +
+                    "WHEN ? = 'location' THEN location " +
+                    "WHEN ? = 'quote' THEN quote END COLLATE NOCASE",
+            arrayOf(currentSortColumn)
         )
 
         cursor.use { cursor ->
@@ -68,7 +69,6 @@ class CharacterDaoCursor @Inject constructor(
     }
 
     override suspend fun get(id: Int): CharacterDb? {
-        Log.d(TAG, "get()")
         var characterDb: CharacterDb? = null
 
         withContext(Dispatchers.IO) {
@@ -93,30 +93,25 @@ class CharacterDaoCursor @Inject constructor(
     }
 
     override suspend fun insert(characterDb: CharacterDb) {
-        Log.d(TAG, "insert()")
 
         withContext(Dispatchers.IO) {
             val values = getContentValues(characterDb)
             db.insert(CharacterTable.TABLE_NAME, null, values)
+            dbDataChangedListener?.invoke(getAllDataFromDb())
         }
-
-        dbDataChangedListener?.invoke(Unit)
     }
 
     override suspend fun insertAll(charactersDb: List<CharacterDb>) {
-        Log.d(TAG, "insertAll()")
 
         withContext(Dispatchers.IO) {
             for (item in charactersDb) {
                 db.insert(CharacterTable.TABLE_NAME, null, getContentValues(item))
             }
+            dbDataChangedListener?.invoke(getAllDataFromDb())
         }
-
-        dbDataChangedListener?.invoke(Unit)
     }
 
     override suspend fun update(characterDb: CharacterDb) {
-        Log.d(TAG, "update()")
 
         withContext(Dispatchers.IO) {
             val values = getContentValues(characterDb)
@@ -126,9 +121,8 @@ class CharacterDaoCursor @Inject constructor(
                 "id = ?",
                 arrayOf(characterDb.id.toString())
             )
+            dbDataChangedListener?.invoke(getAllDataFromDb())
         }
-
-        dbDataChangedListener?.invoke(Unit)
     }
 
     override suspend fun delete(characterDb: CharacterDb) {
@@ -140,9 +134,8 @@ class CharacterDaoCursor @Inject constructor(
                 "id = ?",
                 arrayOf(characterDb.id.toString())
             )
+            dbDataChangedListener?.invoke(getAllDataFromDb())
         }
-
-        dbDataChangedListener?.invoke(Unit)
     }
 
     override suspend fun clear() {
@@ -153,9 +146,8 @@ class CharacterDaoCursor @Inject constructor(
                 null,
                 null
             )
+            dbDataChangedListener?.invoke(getAllDataFromDb())
         }
-
-        dbDataChangedListener?.invoke(Unit)
     }
 
     private fun getContentValues(characterDb: CharacterDb): ContentValues {

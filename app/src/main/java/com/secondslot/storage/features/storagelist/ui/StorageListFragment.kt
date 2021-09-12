@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.secondslot.storage.R
 import com.secondslot.storage.data.repository.model.Character
 import com.secondslot.storage.databinding.FragmentStorageListBinding
@@ -57,13 +58,26 @@ class StorageListFragment : Fragment(), CharacterListener {
         binding.recyclerView.run {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = characterAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    if (dy > 0) {
+                        if (binding.fab.isShown) binding.fab.hide()
+                    }
+
+                    if (dy < 0) {
+                        if (!binding.fab.isShown) binding.fab.show()
+                    }
+                }
+            })
+
             setHasFixedSize(true)
         }
     }
 
     private fun setListeners() {
         binding.fab.setOnClickListener { viewModel.onFabClicked() }
-
     }
 
     private fun setObservers() {
@@ -76,7 +90,9 @@ class StorageListFragment : Fragment(), CharacterListener {
 
         viewModel.openAddEntityLiveData.observe(viewLifecycleOwner) { isClicked ->
             if (isClicked) {
-                val action = StorageListFragmentDirections.toAddEntityFragment()
+                val action = StorageListFragmentDirections.toAddEntityFragment(
+                    label = getString(R.string.add_entity_toolbar_title)
+                )
                 findNavController().navigate(action)
                 viewModel.onFabClickedComplete()
             }
@@ -94,7 +110,8 @@ class StorageListFragment : Fragment(), CharacterListener {
         // Create our observer and add it to the NavBackStackEntry's lifecycle
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME
-                && navBackStackEntry.savedStateHandle.contains("key")) {
+                && navBackStackEntry.savedStateHandle.contains("key")
+            ) {
                 val result = navBackStackEntry.savedStateHandle.get<String>("key");
                 if (result == "OK") {
                     viewModel.onClearDbConfirmed()
@@ -147,7 +164,10 @@ class StorageListFragment : Fragment(), CharacterListener {
     }
 
     override fun edit(id: Int) {
-        val action = StorageListFragmentDirections.toAddEntityFragment(id)
+        val action = StorageListFragmentDirections.toAddEntityFragment(
+            id,
+            label = getString(R.string.edit_entity_toolbar_title)
+        )
         findNavController().navigate(action)
     }
 

@@ -10,9 +10,13 @@ import com.secondslot.storage.data.repository.model.Character
 import com.secondslot.storage.domain.FakeDataForDb.FakeDataForDb
 import com.secondslot.storage.domain.usecase.*
 import com.secondslot.storage.util.ColumnNames
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
+private const val TAG = "StorageListViewModel"
 
 class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
 
@@ -49,11 +53,9 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
 
     init {
         StorageApplication.getComponent().injectStorageListViewModel(this)
-        getCharacters()
     }
 
     private fun getCharacters() {
-//        Log.d("myLogs", "sortField = $sortField, getCharacters()")
         viewModelScope.launch {
             getCharactersUseCase.execute(sortField).collect {
                 _charactersLiveData.value = it

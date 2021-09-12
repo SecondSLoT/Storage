@@ -1,10 +1,12 @@
 package com.secondslot.storage.features.addentity.ui
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,7 +22,6 @@ class AddEntityFragment : Fragment() {
     private lateinit var viewModel: AddEntityViewModel
     private var _binding: FragmentAddEntityBinding? = null
     private val binding get() = requireNotNull(_binding)
-//    private var characterId: Int = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,18 +44,26 @@ class AddEntityFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddEntityViewModel::class.java)
 
-        // Depending on existence of args adjust add or edit version of fragment
-        if (characterId == -1) {
-            requireActivity().actionBar?.title = getString(R.string.add_entity_toolbar_title)
-        } else {
-            requireActivity().actionBar?.title = getString(R.string.edit_entity_toolbar_title)
-            binding.addButton.text = getString(R.string.save_button)
-        }
+        if (characterId != -1) binding.addButton.text = getString(R.string.save_button)
     }
 
     private fun setListeners() {
 
+        binding.nameTextInput.doOnTextChanged { _, _, _, _ ->
+            validateName()
+        }
+
         binding.addButton.setOnClickListener {
+            if (!isValidate()) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.incorrect_input_error),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+                return@setOnClickListener
+            }
+
             if (viewModel.characterId == -1) {
                 val character = Character(
                     name = binding.nameTextInput.text.toString(),
@@ -90,5 +99,18 @@ class AddEntityFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
+    }
+
+    private fun isValidate(): Boolean = validateName()
+
+    private fun validateName(): Boolean {
+        if (binding.nameTextInput.text.toString().trim().isEmpty()) {
+            binding.nameTextInputLayout.error = getString(R.string.empty_field_error)
+            binding.nameTextInput.requestFocus()
+            return false
+        } else {
+            binding.nameTextInputLayout.error = null
+        }
+        return true
     }
 }

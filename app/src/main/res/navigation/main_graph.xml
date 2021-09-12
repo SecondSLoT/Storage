@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/storageListFragment"
         android:name="com.secondslot.storage.features.storagelist.ui.StorageListFragment"
-        android:label="StorageListFragment" >
+        android:label="@string/app_name" >
         <action
             android:id="@+id/to_addEntityFragment"
             app:destination="@id/addEntityFragment" />
@@ -18,16 +18,19 @@
     <fragment
         android:id="@+id/addEntityFragment"
         android:name="com.secondslot.storage.features.addentity.ui.AddEntityFragment"
-        android:label="AddEntityFragment" >
+        android:label="@string/add_entity_lable">
         <argument
             android:name="id"
             android:defaultValue="-1"
             app:argType="integer" />
+        <argument
+            android:name="label"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.secondslot.storage.features.settings.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="@string/settings" />
     <dialog
         android:id="@+id/clearDbDialog"
         android:name="com.secondslot.storage.features.storagelist.ui.ClearDbDialog"

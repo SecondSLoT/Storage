@@ -18,9 +18,7 @@
         <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
     </style>
 
-    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <item name="boxBackgroundColor">?attr/colorSurface</item>
-        <item name="boxBackgroundMode">outline</item>
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintTextColor">?attr/colorSecondaryVariant</item>
     </style>
 

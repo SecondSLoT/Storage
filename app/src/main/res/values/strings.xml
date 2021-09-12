@@ -2,22 +2,30 @@
     <string name="app_name">Storage App</string>
     <string name="add_entity_toolbar_title">Add Character</string>
     <string name="edit_entity_toolbar_title">Edit Character</string>
+    <string name="add_entity_lable" translatable="false">{label}</string>
 
     <string name="name">Name</string>
     <string name="location">Location</string>
     <string name="quote">Quote</string>
     <string name="none">None</string>
+    <string name="unknown">Unknown</string>
+    <string name="not_set">Not set</string>
 
+    <!-- Buttons -->
     <string name="add_button">add</string>
     <string name="save_button">save</string>
     <string name="fab_content_description">add new character</string>
     <string name="edit_content_description">edit character</string>
 
+    <!-- Errors -->
+    <string name="empty_field_error">Field can\'t be empty</string>
+    <string name="incorrect_input_error">Incorrect data input</string>
+
     <!-- Settings fragment -->
     <string name="sort_by">Sort by</string>
     <string name="db_management_system">Database management system</string>
-    <string name="room">Room</string>
-    <string name="cursor">Cursor</string>
+    <string name="room" translatable="false">Room</string>
+    <string name="cursor" translatable="false">Cursor</string>
 
 
     <string name="edit">Edit</string>
@@ -25,12 +33,12 @@
 
     <!-- Main menu -->
     <string name="settings">Settings</string>
-    <string name="add_fake_data">Add fake data to Db</string>
-    <string name="clear_db">Clear database</string>
+    <string name="add_fake_data">Add arbitrary data to DB</string>
+    <string name="clear_db">Clear DB</string>
 
     <!-- Clear db confirm dialog -->
     <string name="clear_db_dialog_title">Clear database?</string>
-    <string name="clear_db_dialog_message">This will delete all characters</string>
+    <string name="clear_db_dialog_message">All entries will be deleted</string>
     <string name="clear_db_dialog_positive_button">Clear</string>
     <string name="clear_db_dialog_negative_button">Cancel</string>
 

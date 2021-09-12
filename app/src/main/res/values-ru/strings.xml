@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Storage App</string>
+    <string name="add_entity_toolbar_title">Добавить персонаж</string>
+    <string name="edit_entity_toolbar_title">Редактировать персонаж</string>
+
+    <string name="name">Имя</string>
+    <string name="location">Местоположение</string>
+    <string name="quote">Цитата</string>
+    <string name="none">Нет</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="not_set">Не задано</string>
+
+    <!-- Buttons -->
+    <string name="add_button">добавить</string>
+    <string name="save_button">сохранить</string>
+    <string name="fab_content_description">Добавить новый персонаж</string>
+    <string name="edit_content_description">Редактировать персонаж</string>
+
+    <!-- Errors -->
+    <string name="empty_field_error">Поле не может быть пустым</string>
+    <string name="incorrect_input_error">Неверный ввод данных</string>
+
+    <!-- Settings fragment -->
+    <string name="sort_by">Сортировать по</string>
+    <string name="db_management_system">Систеиа управления базой данных</string>
+
+
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+
+    <!-- Main menu -->
+    <string name="settings">Настройки</string>
+    <string name="add_fake_data">Добавить произвольные данные в БД</string>
+    <string name="clear_db">Очистить БД</string>
+
+    <!-- Clear db confirm dialog -->
+    <string name="clear_db_dialog_title">Очистить базу данных?</string>
+    <string name="clear_db_dialog_message">Все записи будут удалены</string>
+    <string name="clear_db_dialog_positive_button">Очистить</string>
+    <string name="clear_db_dialog_negative_button">Отмена</string>
+
+</resources>

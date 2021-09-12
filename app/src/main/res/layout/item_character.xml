@@ -38,7 +38,8 @@
             app:layout_constraintStart_toEndOf="@+id/margin_start_guideline"
             app:layout_constraintEnd_toStartOf="@id/edit_button"
             android:textAppearance="?attr/textAppearanceHeadline5"
-            tools:text="Rick" />
+            android:fontFamily="@font/gilroy_bold"
+            tools:text="Rick Sanchez" />
 
         <TextView
             android:id="@+id/location_icon_text_view"
@@ -61,6 +62,7 @@
             app:layout_constraintBaseline_toBaselineOf="@id/location_icon_text_view"
             app:layout_constraintStart_toEndOf="@+id/location_icon_text_view"
             app:layout_constraintEnd_toStartOf="@id/edit_button"
+            android:fontFamily="@font/gilroy_medium"
             tools:text="Earth" />
 
 
@@ -69,12 +71,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textStyle="italic"
+            android:paddingBottom="2dp"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toBottomOf="@id/location_text_view"
             app:layout_constraintStart_toEndOf="@+id/margin_start_guideline"
             app:layout_constraintEnd_toStartOf="@id/edit_button"
-            tools:text="Go go go!  Gfodmsbeufjchririj hudjrji iifjrii kdjfhf 6eudifjdhdhfkfjffn" />
+            android:fontFamily="@font/gilroy_mediumitalic"
+            tools:text="It's fine, everything is fine. Theres an infinite number of realities
+Morty and in a few dozen of those I got lucky and turned everything back to normal." />
 
         <ImageButton
             android:id="@+id/edit_button"

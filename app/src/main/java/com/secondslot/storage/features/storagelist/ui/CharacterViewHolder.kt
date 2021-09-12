@@ -22,21 +22,30 @@ class CharacterViewHolder(
     fun bind(character: Character) {
         this.character = character
 
-        val quoteText = "\" ${character.quote}\""
+            binding.nameTextView.text = character.name
 
-        binding.run {
-            nameTextView.text = character.name
-            locationTextView.text = character.location
-            quoteTextView.text = quoteText
+            // Check if location is empty or not and set appropriate text
+            if (character.location.isNotEmpty()) {
+                binding.locationTextView.text = character.location
+            } else {
+                binding.locationTextView.text = itemView.context.getString(R.string.unknown)
+            }
 
-            editButton.setOnClickListener {
+            // Chek if quote is empty or not and set appropriate text
+            if (character.quote.isNotEmpty()) {
+                val quoteText = "\" ${character.quote}\""
+                binding.quoteTextView.text = quoteText
+            } else {
+                binding.quoteTextView.text = itemView.context.getString(R.string.not_set)
+            }
+
+            binding.editButton.setOnClickListener {
                 val popup = PopupMenu(itemView.context, it)
                 popup.setOnMenuItemClickListener(this@CharacterViewHolder)
                 val inflater: MenuInflater = popup.menuInflater
                 inflater.inflate(R.menu.character_menu, popup.menu)
                 popup.show()
             }
-        }
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
