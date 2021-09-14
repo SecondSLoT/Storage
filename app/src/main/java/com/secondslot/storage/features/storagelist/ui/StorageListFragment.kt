@@ -2,7 +2,12 @@ package com.secondslot.storage.features.storagelist.ui
 
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -12,6 +17,7 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.secondslot.storage.R
 import com.secondslot.storage.data.repository.model.Character
 import com.secondslot.storage.databinding.FragmentStorageListBinding
@@ -23,13 +29,11 @@ private const val TAG = "StorageListFragment"
 
 class StorageListFragment : Fragment(), CharacterListener {
 
-    //    private val viewModel by viewModels<StorageListViewModel>()
     private lateinit var viewModel: StorageListViewModel
     private var _binding: FragmentStorageListBinding? = null
     private val binding get() = requireNotNull(_binding)
 
     private val characterAdapter = CharacterAdapter(this)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +89,6 @@ class StorageListFragment : Fragment(), CharacterListener {
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
             Log.d(TAG, "CharactersLiveData received. Characters.size = ${characters.size}")
             characters?.let { characterAdapter.submitList(characters) }
-//            Log.d("myLogs", characters.joinToString())
         }
 
         viewModel.openAddEntityLiveData.observe(viewLifecycleOwner) { isClicked ->
@@ -105,14 +108,18 @@ class StorageListFragment : Fragment(), CharacterListener {
             }
         }
 
+        viewModel.characterDeletedLiveData.observe(viewLifecycleOwner) { deletedCharacter ->
+            if (deletedCharacter != null) showCharacterDeletedSnackbar(deletedCharacter)
+        }
+
         val navBackStackEntry = findNavController().getBackStackEntry(R.id.storageListFragment)
 
-        // Create our observer and add it to the NavBackStackEntry's lifecycle
+        // Create observer and add it to the NavBackStackEntry's lifecycle
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME
                 && navBackStackEntry.savedStateHandle.contains("key")
             ) {
-                val result = navBackStackEntry.savedStateHandle.get<String>("key");
+                val result = navBackStackEntry.savedStateHandle.get<String>("key")
                 if (result == "OK") {
                     viewModel.onClearDbConfirmed()
                     Log.d("myLogs", "Clear DB confirmed")
@@ -134,7 +141,6 @@ class StorageListFragment : Fragment(), CharacterListener {
 
     override fun onResume() {
         super.onResume()
-        Log.d("myLogs", "StorageListFragment onResume()")
         viewModel.onPrefsUpdated()
     }
 
@@ -163,6 +169,7 @@ class StorageListFragment : Fragment(), CharacterListener {
         findNavController().navigate(action)
     }
 
+    // CharacterListener function edit()
     override fun edit(id: Int) {
         val action = StorageListFragmentDirections.toAddEntityFragment(
             id,
@@ -171,7 +178,20 @@ class StorageListFragment : Fragment(), CharacterListener {
         findNavController().navigate(action)
     }
 
+    // CharacterListener function delete()
     override fun delete(character: Character) {
         viewModel.onDeleteButtonClicked(character)
+    }
+
+    private fun showCharacterDeletedSnackbar(character: Character) {
+        val message = getString(R.string.snackbar_message, character.name)
+
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+                viewModel.onRestoreCharacter(character)
+            }
+            .show()
+
+        viewModel.onRestoreCharacterCompleted()
     }
 }

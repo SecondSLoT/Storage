@@ -7,22 +7,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.secondslot.storage.StorageApplication
 import com.secondslot.storage.data.repository.model.Character
-import com.secondslot.storage.domain.FakeDataForDb.FakeDataForDb
-import com.secondslot.storage.domain.usecase.*
+import com.secondslot.storage.domain.fakedatafordb.FakeDataForDb
+import com.secondslot.storage.domain.usecase.ClearDbUseCase
+import com.secondslot.storage.domain.usecase.DeleteCharacterUseCase
+import com.secondslot.storage.domain.usecase.GetCharactersUseCase
+import com.secondslot.storage.domain.usecase.InsertCharacterUseCase
+import com.secondslot.storage.domain.usecase.InsertCharactersUseCase
 import com.secondslot.storage.util.ColumnNames
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-private const val TAG = "StorageListViewModel"
 
 class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
 
     private val fakeDataForDb = FakeDataForDb()
     private var sortField = getSortField()
-//    private var dbms = prefs.getString("db_management_system", "1")
 
     @Inject
     lateinit var getCharactersUseCase: GetCharactersUseCase
@@ -39,9 +39,6 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
     @Inject
     lateinit var clearDbUseCase: ClearDbUseCase
 
-    @Inject
-    lateinit var notifyDbChangedUseCase: NotifyDbChangedUseCase
-
     private var _charactersLiveData = MutableLiveData<List<Character>>()
     val charactersLiveData get() = _charactersLiveData
 
@@ -50,6 +47,9 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
 
     private val _clearDbSelectedLiveData = MutableLiveData<Boolean>()
     val clearDbSelectedLiveData get() = _clearDbSelectedLiveData
+
+    private val _characterDeletedLiveData = MutableLiveData<Character?>()
+    val characterDeletedLiveData get() = _characterDeletedLiveData
 
     init {
         StorageApplication.getComponent().injectStorageListViewModel(this)
@@ -72,7 +72,7 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
     }
 
     private fun getSortField(): String =
-        when (prefs.getString("sort_by", "id")!!) {
+        when (prefs.getString("sort_by", ColumnNames.ID.value)) {
             "name" -> ColumnNames.NAME.value
             "location" -> ColumnNames.LOCATION.value
             "quote" -> ColumnNames.QUOTE.value
@@ -98,9 +98,20 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
         }
     }
 
+    fun onRestoreCharacter(character: Character) {
+        viewModelScope.launch {
+            insertCharacterUseCase.execute(character)
+        }
+    }
+
+    fun onRestoreCharacterCompleted() {
+        _characterDeletedLiveData.value = null
+    }
+
     fun onDeleteButtonClicked(character: Character) {
         viewModelScope.launch {
             deleteCharacterUseCase.execute(character)
+            _characterDeletedLiveData.value = character
         }
     }
 

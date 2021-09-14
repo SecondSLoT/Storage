@@ -20,8 +20,4 @@ class ClearDbDialog : DialogFragment() {
                 dialog.cancel()
             }
             .create()
-
-    companion object {
-        const val TAG = "ClearDbDialog"
-    }
 }

@@ -18,6 +18,4 @@ interface Repository {
     suspend  fun deleteCharacter(character: Character)
 
     suspend fun clearDb()
-
-    fun notifyDbChanged(): Boolean
 }

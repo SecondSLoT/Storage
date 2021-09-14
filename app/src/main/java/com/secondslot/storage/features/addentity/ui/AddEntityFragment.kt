@@ -1,6 +1,5 @@
 package com.secondslot.storage.features.addentity.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -66,17 +65,17 @@ class AddEntityFragment : Fragment() {
 
             if (viewModel.characterId == -1) {
                 val character = Character(
-                    name = binding.nameTextInput.text.toString(),
-                    location = binding.locationTextInput.text.toString(),
-                    quote = binding.quoteTextInput.text.toString()
+                    name = binding.nameTextInput.text.toString().trim(),
+                    location = binding.locationTextInput.text.toString().trim(),
+                    quote = binding.quoteTextInput.text.toString().trim()
                 )
                 viewModel.onAddButtonClicked(character)
             } else {
                 val character = Character(
                     id = viewModel.characterId,
-                    name = binding.nameTextInput.text.toString(),
-                    location = binding.locationTextInput.text.toString(),
-                    quote = binding.quoteTextInput.text.toString()
+                    name = binding.nameTextInput.text.toString().trim(),
+                    location = binding.locationTextInput.text.toString().trim(),
+                    quote = binding.quoteTextInput.text.toString().trim()
                 )
                 viewModel.onEditButtonClicked(character)
             }

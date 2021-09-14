@@ -9,6 +9,5 @@ data class CharacterDb(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "name") val name: String = "",
     @ColumnInfo(name = "location") val location: String = "",
-//    @ColumnInfo(name = "location_id") val locationId: Int
     @ColumnInfo(name = "quote") val quote: String = ""
 )

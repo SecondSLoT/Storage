@@ -1,4 +1,4 @@
-package com.secondslot.storage.domain.FakeDataForDb
+package com.secondslot.storage.domain.fakedatafordb
 
 import com.github.javafaker.Faker
 import com.secondslot.storage.data.repository.model.Character

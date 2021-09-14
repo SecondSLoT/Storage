@@ -16,6 +16,8 @@
     <string name="save_button">save</string>
     <string name="fab_content_description">add new character</string>
     <string name="edit_content_description">edit character</string>
+    <string name="snackbar_message">%s deleted</string>
+    <string name="snackbar_undo">Undo</string>
 
     <!-- Errors -->
     <string name="empty_field_error">Field can\'t be empty</string>

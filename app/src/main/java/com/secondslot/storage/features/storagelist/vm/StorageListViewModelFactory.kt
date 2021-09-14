@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.IllegalArgumentException
 
-class StorageListViewModelFactory(private val prefs: SharedPreferences)
-    : ViewModelProvider.Factory {
+class StorageListViewModelFactory(private val prefs: SharedPreferences) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StorageListViewModel::class.java)) {

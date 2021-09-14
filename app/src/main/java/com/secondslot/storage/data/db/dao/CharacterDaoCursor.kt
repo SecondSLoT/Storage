@@ -19,7 +19,7 @@ private const val TAG = "CharacterDaoCursor"
 
 class CharacterDaoCursor @Inject constructor(
     private val db: SQLiteDatabase
-) : CharacterDao() {
+) : CharacterDao {
 
     private var currentSortColumn = "id"
     private var dbDataChangedListener: ((List<CharacterDb>) -> Unit)? = null
@@ -50,11 +50,11 @@ class CharacterDaoCursor @Inject constructor(
         val charactersDb = mutableListOf<CharacterDb>()
 
         val cursor = db.rawQuery(
-            "SELECT * FROM characters ORDER BY " +
-                    "CASE WHEN ? = 'name' THEN name " +
-                    "WHEN ? = 'location' THEN location " +
-                    "WHEN ? = 'quote' THEN quote END COLLATE NOCASE",
-            arrayOf(currentSortColumn)
+            "SELECT * FROM ${CharacterTable.TABLE_NAME} ORDER BY " +
+                "CASE WHEN ? = '${CharacterTable.NAME}' THEN name " +
+                "WHEN ? = '${CharacterTable.LOCATION}' THEN location " +
+                "WHEN ? = '${CharacterTable.QUOTE}' THEN quote END COLLATE NOCASE",
+            arrayOf(currentSortColumn, currentSortColumn, currentSortColumn)
         )
 
         cursor.use { cursor ->
@@ -126,7 +126,6 @@ class CharacterDaoCursor @Inject constructor(
     }
 
     override suspend fun delete(characterDb: CharacterDb) {
-        Log.d(TAG, "delete() id = ${characterDb.id}")
 
         withContext(Dispatchers.IO) {
             db.delete(
@@ -152,7 +151,6 @@ class CharacterDaoCursor @Inject constructor(
 
     private fun getContentValues(characterDb: CharacterDb): ContentValues {
         val values = ContentValues()
-//        values.put(CharacterTable.ID, characterDb.id)
         values.put(CharacterTable.NAME, characterDb.name)
         values.put(CharacterTable.LOCATION, characterDb.location)
         values.put(CharacterTable.QUOTE, characterDb.quote)

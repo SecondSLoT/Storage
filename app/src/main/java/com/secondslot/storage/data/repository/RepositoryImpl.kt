@@ -30,7 +30,7 @@ class RepositoryImpl @Inject constructor() : Repository {
     }
 
     private fun getDao(): CharacterDao {
-        return when (prefs.getString("db_management_system", "1")!!) {
+        return when (prefs.getString("db_management_system", "1")) {
             "1" -> roomDao
             else -> cursorDao
         }
@@ -69,12 +69,5 @@ class RepositoryImpl @Inject constructor() : Repository {
 
     override suspend fun clearDb() {
         getDao().clear()
-    }
-
-    override fun notifyDbChanged(): Boolean {
-        if (prefs.getString("db_management_system","1") == "2") {
-            return true
-        }
-        return false
     }
 }

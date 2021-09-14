@@ -1,6 +1,5 @@
 package com.secondslot.storage.features.storagelist.ui
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -31,7 +30,7 @@ class CharacterViewHolder(
                 binding.locationTextView.text = itemView.context.getString(R.string.unknown)
             }
 
-            // Chek if quote is empty or not and set appropriate text
+            // Check if quote is empty or not and set appropriate text
             if (character.quote.isNotEmpty()) {
                 val quoteText = "\" ${character.quote}\""
                 binding.quoteTextView.text = quoteText
