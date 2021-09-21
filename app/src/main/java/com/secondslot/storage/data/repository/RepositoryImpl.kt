@@ -11,6 +11,7 @@ import com.secondslot.storage.di.ApplicationScope
 import com.secondslot.storage.domain.Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @ApplicationScope
@@ -36,6 +37,7 @@ class RepositoryImpl @Inject constructor() : Repository {
         }
     }
 
+    // Maybe better to make requests and mappings on IO?
     override fun getCharacters(sortField: String): Flow<List<Character>> {
         return getDao().getAllSorted(sortField).map { charactersDb ->
             LocalToItemMapper.map(charactersDb)

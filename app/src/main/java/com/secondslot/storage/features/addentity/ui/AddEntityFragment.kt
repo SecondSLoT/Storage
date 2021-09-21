@@ -52,6 +52,7 @@ class AddEntityFragment : Fragment() {
             validateName()
         }
 
+        // Wouldn't it be better to move all listener logic to ViewModel?
         binding.addButton.setOnClickListener {
             if (!isValidate()) {
                 Toast.makeText(
@@ -100,6 +101,7 @@ class AddEntityFragment : Fragment() {
         }
     }
 
+    // Why not implement the validation logic directly in this function?
     private fun isValidate(): Boolean = validateName()
 
     private fun validateName(): Boolean {

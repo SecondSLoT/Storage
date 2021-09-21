@@ -38,6 +38,8 @@ class CharacterViewHolder(
                 binding.quoteTextView.text = itemView.context.getString(R.string.not_set)
             }
 
+        // Preferably to set ClickListener in onCreateViewHolder.
+        // Otherwise, when scroll you will allocate memory for listener object on each onBind().
             binding.editButton.setOnClickListener {
                 val popup = PopupMenu(itemView.context, it)
                 popup.setOnMenuItemClickListener(this@CharacterViewHolder)

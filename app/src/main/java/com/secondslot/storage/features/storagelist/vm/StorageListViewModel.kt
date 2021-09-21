@@ -67,6 +67,8 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
         _openAddEntityLiveData.value = true
     }
 
+//    It isn't the best way to handle a single LiveData event. Look this:
+//    https://medium.com/androiddevelopers/livedata-with-snackbar-navigation-and-other-events-the-singleliveevent-case-ac2622673150
     fun onFabClickedComplete() {
         _openAddEntityLiveData.value = false
     }
@@ -93,7 +95,7 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
     fun onAddFakeDataSelected() {
         viewModelScope.launch {
             Log.i("myLogs", "Adding fake entities to DB")
-            val list = fakeDataForDb.generateFakeData(10)
+            val list = fakeDataForDb.generateFakeData(100000) // magic number
             insertCharactersUseCase.execute(list)
         }
     }

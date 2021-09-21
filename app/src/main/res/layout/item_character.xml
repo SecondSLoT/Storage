@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+<!-- Why did you choose GuideLine instead of paddingStart in the container? -->
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/margin_start_guideline"
             android:layout_width="0dp"
