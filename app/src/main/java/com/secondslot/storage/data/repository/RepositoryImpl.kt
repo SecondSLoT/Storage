@@ -1,6 +1,7 @@
 package com.secondslot.storage.data.repository
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.secondslot.storage.StorageApplication
 import com.secondslot.storage.data.db.dao.CharacterDao
 import com.secondslot.storage.data.db.dao.CharacterDaoCursor
@@ -11,11 +12,12 @@ import com.secondslot.storage.di.ApplicationScope
 import com.secondslot.storage.domain.Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+private const val TAG = "RepositoryImpl"
+
 @ApplicationScope
-class RepositoryImpl @Inject constructor() : Repository {
+class RepositoryImpl : Repository {
 
     @Inject
     lateinit var prefs: SharedPreferences
@@ -38,8 +40,13 @@ class RepositoryImpl @Inject constructor() : Repository {
     }
 
     // Maybe better to make requests and mappings on IO?
+    // Yes, of course! Room makes request in IO automatically, for cursor version I had
+    // wrapped the request in a coroutine with IO thread, but didn't pay attention to that
+    // the all path from DB to ViewModel is in main thread. I've changed the thread to IO in
+    // StorageListViewModel, from where invocation starts. Thanks for remark!
     override fun getCharacters(sortField: String): Flow<List<Character>> {
         return getDao().getAllSorted(sortField).map { charactersDb ->
+            Log.d(TAG, "getDao(), thread = " + Thread.currentThread().name)
             LocalToItemMapper.map(charactersDb)
         }
     }

@@ -12,15 +12,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_screen_start"
+        tools:ignore="RtlSymmetry">
 
 <!-- Why did you choose GuideLine instead of paddingStart in the container? -->
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/margin_start_guideline"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="@dimen/margin_screen_start" />
+<!-- Guideline is unnecessary here. You are right, paddingStart is more convenient -->
 
         <TextView
             android:id="@+id/name_text_view"
@@ -28,7 +25,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/margin_start_guideline"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/edit_button"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:fontFamily="@font/gilroy_bold"
@@ -42,7 +39,7 @@
             android:text="@string/fa_map_marker"
             android:fontFamily="@font/font_awesome"
             android:textAppearance="?attr/textAppearanceSubtitle1"
-            app:layout_constraintStart_toStartOf="@id/margin_start_guideline"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_text_view" />
 
         <TextView
@@ -67,7 +64,7 @@
             android:paddingBottom="2dp"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toBottomOf="@id/location_text_view"
-            app:layout_constraintStart_toEndOf="@+id/margin_start_guideline"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/edit_button"
             android:fontFamily="@font/gilroy_mediumitalic"
             tools:text="It's fine, everything is fine. Theres an infinite number of realities

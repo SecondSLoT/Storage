@@ -49,10 +49,12 @@ class AddEntityFragment : Fragment() {
     private fun setListeners() {
 
         binding.nameTextInput.doOnTextChanged { _, _, _, _ ->
-            validateName()
+            isValidate()
         }
 
         // Wouldn't it be better to move all listener logic to ViewModel?
+        // Moved part of logic to ViewModel. As for isValidate(), I'll take into account to
+        // move this logic to ViewModel in further projects, but won't spend time on it now
         binding.addButton.setOnClickListener {
             if (!isValidate()) {
                 Toast.makeText(
@@ -64,22 +66,11 @@ class AddEntityFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            if (viewModel.characterId == -1) {
-                val character = Character(
-                    name = binding.nameTextInput.text.toString().trim(),
-                    location = binding.locationTextInput.text.toString().trim(),
-                    quote = binding.quoteTextInput.text.toString().trim()
-                )
-                viewModel.onAddButtonClicked(character)
-            } else {
-                val character = Character(
-                    id = viewModel.characterId,
-                    name = binding.nameTextInput.text.toString().trim(),
-                    location = binding.locationTextInput.text.toString().trim(),
-                    quote = binding.quoteTextInput.text.toString().trim()
-                )
-                viewModel.onEditButtonClicked(character)
-            }
+            viewModel.onAddButtonClicked(
+                name = binding.nameTextInput.text.toString().trim(),
+                location = binding.locationTextInput.text.toString().trim(),
+                quote = binding.quoteTextInput.text.toString().trim()
+            )
         }
     }
 
@@ -102,9 +93,10 @@ class AddEntityFragment : Fragment() {
     }
 
     // Why not implement the validation logic directly in this function?
-    private fun isValidate(): Boolean = validateName()
-
-    private fun validateName(): Boolean {
+    // The idea of this code if from the internet and it was reserved for several conditions for
+    // checking states of fields. But in this case it's an over engineering, so of course the
+    // validation logic should be directly in this function.
+    private fun isValidate(): Boolean {
         if (binding.nameTextInput.text.toString().trim().isEmpty()) {
             binding.nameTextInputLayout.error = getString(R.string.empty_field_error)
             binding.nameTextInput.requestFocus()

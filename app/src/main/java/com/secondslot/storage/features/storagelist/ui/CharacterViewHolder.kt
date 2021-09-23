@@ -40,13 +40,7 @@ class CharacterViewHolder(
 
         // Preferably to set ClickListener in onCreateViewHolder.
         // Otherwise, when scroll you will allocate memory for listener object on each onBind().
-            binding.editButton.setOnClickListener {
-                val popup = PopupMenu(itemView.context, it)
-                popup.setOnMenuItemClickListener(this@CharacterViewHolder)
-                val inflater: MenuInflater = popup.menuInflater
-                inflater.inflate(R.menu.character_menu, popup.menu)
-                popup.show()
-            }
+        // Thanks for remark. I didn't notice that issue. Fixed.
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -61,7 +55,19 @@ class CharacterViewHolder(
         fun from(parent: ViewGroup, listener: CharacterListener): CharacterViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemCharacterBinding.inflate(layoutInflater, parent, false)
-            return CharacterViewHolder(binding, listener)
+
+            val holder = CharacterViewHolder(binding, listener)
+
+            // Moved ClickListener from bind() here
+            binding.editButton.setOnClickListener {
+                val popup = PopupMenu(parent.context, it)
+                popup.setOnMenuItemClickListener(holder)
+                val inflater: MenuInflater = popup.menuInflater
+                inflater.inflate(R.menu.character_menu, popup.menu)
+                popup.show()
+            }
+
+            return holder
         }
     }
 }
