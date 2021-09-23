@@ -28,6 +28,9 @@ class AddEntityViewModel(private val characterId: Int) : ViewModel() {
     private var _getCharacterLiveData = MutableLiveData<Character>()
     val getCharacterLiveData get() = _getCharacterLiveData
 
+    private var _incorrectInputLiveData = MutableLiveData<Boolean>()
+    val incorrectInputLiveData get() = _incorrectInputLiveData
+
     init {
         StorageApplication.getComponent().injectAddEntityViewModel(this)
 
@@ -72,6 +75,7 @@ class AddEntityViewModel(private val characterId: Int) : ViewModel() {
 
     fun onAddButtonComplete() {
         _characterAddedLiveData.value = false
+        _incorrectInputLiveData.value = false
     }
 
     private fun editCharacter(character: Character) {
