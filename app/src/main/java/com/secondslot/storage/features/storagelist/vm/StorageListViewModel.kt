@@ -14,8 +14,10 @@ import com.secondslot.storage.domain.usecase.GetCharactersUseCase
 import com.secondslot.storage.domain.usecase.InsertCharacterUseCase
 import com.secondslot.storage.domain.usecase.InsertCharactersUseCase
 import com.secondslot.storage.util.ColumnNames
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -56,9 +58,9 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
     }
 
     private fun getCharacters() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getCharactersUseCase.execute(sortField).collect {
-                _charactersLiveData.value = it
+                withContext(Dispatchers.Main) { _charactersLiveData.value = it }
             }
         }
     }
@@ -69,6 +71,11 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
 
 //    It isn't the best way to handle a single LiveData event. Look this:
 //    https://medium.com/androiddevelopers/livedata-with-snackbar-navigation-and-other-events-the-singleliveevent-case-ac2622673150
+    // I used exact this approach from this article (I even have this link in my bookmarks!) in my
+    // previous homework, but then I saw this method in google codelabs, so I didn't know what is
+    // better to use. I will use the approach from article in my further projects, but won't fix
+    // this code right now (because I know how to do it and don't want to spend my time on it now).
+    // Maybe I will fix this later
     fun onFabClickedComplete() {
         _openAddEntityLiveData.value = false
     }
@@ -93,9 +100,10 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
      * Generates some entities and adds them to database
      */
     fun onAddFakeDataSelected() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.i("myLogs", "Adding fake entities to DB")
-            val list = fakeDataForDb.generateFakeData(100000) // magic number
+            val list = fakeDataForDb.generateFakeData(NUMBER_ENTITIES_TO_GENERATE) // magic number
+                                                                                   // Fixed
             insertCharactersUseCase.execute(list)
         }
     }
@@ -129,5 +137,9 @@ class StorageListViewModel(private val prefs: SharedPreferences) : ViewModel() {
         viewModelScope.launch {
             clearDbUseCase.execute()
         }
+    }
+
+    companion object {
+        private const val NUMBER_ENTITIES_TO_GENERATE = 10
     }
 }

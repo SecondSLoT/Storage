@@ -7,7 +7,13 @@ import com.secondslot.storage.features.storagelist.vm.StorageListViewModel
 import dagger.Component
 
 @ApplicationScope
-@Component(modules = [DbModule::class, PrefsModule::class])
+@Component(
+    modules = [
+        DbModule::class,
+        PrefsModule::class,
+        RepositoryModule::class
+    ]
+)
 interface AppComponent {
 
     fun injectStorageListViewModel(viewModel: StorageListViewModel)

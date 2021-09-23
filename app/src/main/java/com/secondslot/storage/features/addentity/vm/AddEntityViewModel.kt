@@ -11,7 +11,7 @@ import com.secondslot.storage.domain.usecase.UpdateCharacterUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AddEntityViewModel(val characterId: Int) : ViewModel() {
+class AddEntityViewModel(private val characterId: Int) : ViewModel() {
 
     @Inject
     lateinit var insertCharacterUseCase: InsertCharacterUseCase
@@ -38,7 +38,32 @@ class AddEntityViewModel(val characterId: Int) : ViewModel() {
         }
     }
 
-    fun onAddButtonClicked(character: Character) {
+    fun onAddButtonClicked(
+        name: String,
+        location: String,
+        quote: String
+    ) {
+
+        if (characterId == -1) {
+            val character = Character(
+                name = name,
+                location = location,
+                quote = quote
+            )
+            insertCharacter(character)
+
+        } else {
+            val character = Character(
+                id = characterId,
+                name = name,
+                location = location,
+                quote = quote
+            )
+            editCharacter(character)
+        }
+    }
+
+    private fun insertCharacter(character: Character) {
         viewModelScope.launch {
             insertCharacterUseCase.execute(character)
         }
@@ -49,7 +74,7 @@ class AddEntityViewModel(val characterId: Int) : ViewModel() {
         _characterAddedLiveData.value = false
     }
 
-    fun onEditButtonClicked(character: Character) {
+    private fun editCharacter(character: Character) {
         viewModelScope.launch {
             updateCharacterUseCase.execute(character)
         }
