@@ -25,9 +25,8 @@ detekt {
     toolVersion = "1.18.1"
     config = files("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
-    failFast = true
 
-    input = files("app/src/main/java", "app/src/main/kotlin")
+    source = files("app/src/main/java", "app/src/main/kotlin")
 
     reports {
         html {
